@@ -30,16 +30,18 @@ public class GameView extends View {
     final long UPDATE_MILLS = 30;
     Runnable runnable;
     Paint textPaint = new Paint();
-    Paint helthPaint = new Paint();
+    Paint textLostPaint = new Paint();
+    //Paint helthPaint = new Paint();
     float TEXT_SIZE = 120;
     int points = 0;
-    int life = 3;
+    //int life = 3;
     static  int dWidth, dHeight;
     Random random;
     float trunkX, trunkY;
     float oldX;
     float oldTrunkX;
     ArrayList<Coin> coins;
+    int lost = 0;
     ArrayList<Splash> splashes;
 
     public GameView(Context context) {
@@ -66,7 +68,12 @@ public class GameView extends View {
         textPaint.setTextSize(TEXT_SIZE);
         textPaint.setTextAlign(Paint.Align.LEFT);
         textPaint.setTypeface(ResourcesCompat.getFont(context, R.font.kenney_high));
-        helthPaint.setColor(Color.GREEN);
+        textLostPaint.setColor(Color.rgb(255, 255, 10));
+        textLostPaint.setTextSize(TEXT_SIZE);
+        textLostPaint.setTextAlign(Paint.Align.LEFT);
+        textLostPaint.setTypeface(ResourcesCompat.getFont(context, R.font.kenney_high));
+
+        //helthPaint.setColor(Color.GREEN);
         random = new Random();
         trunkX = dWidth/2 - trunk.getWidth()/2;
         trunkY = dHeight - ground.getHeight() - trunk.getHeight();
@@ -92,7 +99,13 @@ public class GameView extends View {
             }
             coins.get(i).coinY+=coins.get(i).coinVelocity;
             if (coins.get(i).coinY+coins.get(i).getCoinHeght()>=dHeight - ground.getHeight()) {
-                points+=10;
+                lost+=1;
+                if (lost==10) {
+                    @SuppressLint("DrawAllocation") Intent intent = new Intent(context, GameOver.class);
+                    intent.putExtra("points", points);
+                    context.startActivity(intent);
+                    ((Activity) context).finish();
+                }
                 Splash splash = new Splash(context);
                 splash.splashX = coins.get(i).coinX;
                 splash.splashY = coins.get(i).coinY;
@@ -106,14 +119,8 @@ public class GameView extends View {
                     && coins.get(i).coinX <=trunkX + trunk.getWidth()
                     && coins.get(i).coinY + coins.get(i).getCoinWidth() >= trunkY
                     && coins.get(i).coinY + coins.get(i).getCoinWidth()<=trunkY+trunk.getHeight()) {
-                life--;
+                points+=10;
                 coins.get(i).resetPosition();
-                if (life==0) {
-                    @SuppressLint("DrawAllocation") Intent intent = new Intent(context, GameOver.class);
-                    intent.putExtra("points", points);
-                    context.startActivity(intent);
-                    ((Activity) context).finish();
-                }
             }
         }
         for (int i =0; i<splashes.size(); i++) {
@@ -125,13 +132,14 @@ public class GameView extends View {
             }
         }
 
-        if (life==2) {
+        /*if (life==2) {
             helthPaint.setColor(Color.YELLOW);
         } else if (life == 1) {
             helthPaint.setColor(Color.RED);
-        }
-        canvas.drawRect(dWidth=200, 30, dWidth-200+60*life, 80, helthPaint);
-        canvas.drawText(" "+ points, 20, TEXT_SIZE, textPaint);
+        }*/
+        //canvas.drawRect(dWidth=200, 30, dWidth-200+60*life, 80, helthPaint);
+        canvas.drawText("points "+ points, 20, TEXT_SIZE, textPaint);
+        canvas.drawText("lost "+lost, 20, TEXT_SIZE*2, textLostPaint);
         handler.postDelayed(runnable, UPDATE_MILLS);
     }
 
