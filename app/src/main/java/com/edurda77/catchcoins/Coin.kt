@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import java.util.Random
 
 class Coin(context: Context) {
-    var coins = arrayOfNulls<Bitmap>(4)
+    var coins = arrayOf<Bitmap>()
     var coinFrame = 0
     var coinX = 0
     var coinY = 0
@@ -22,14 +22,14 @@ class Coin(context: Context) {
         resetPosition()
     }
 
-    fun getCoin(coinFrame: Int): Bitmap? {
+    fun getCoin(coinFrame: Int): Bitmap {
         return coins[coinFrame]
     }
 
     val coinWidth: Int
-        get() = coins[0]!!.width
+        get() = coins[0].width
     val coinHeight: Int
-        get() = coins[0]!!.height
+        get() = coins[0].height
 
     fun resetPosition() {
         coinX = random.nextInt(GameView.dWidth - coinWidth)
