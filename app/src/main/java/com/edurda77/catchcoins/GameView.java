@@ -40,7 +40,7 @@ public class GameView extends View {
     float oldX;
     float oldTrunkX;
     ArrayList<Coin> coins;
-    ArrayList<Splashe> splashes;
+    ArrayList<Splash> splashes;
 
     public GameView(Context context) {
         super(context);
@@ -85,31 +85,31 @@ public class GameView extends View {
         canvas.drawBitmap(ground, null, rectGround, null);
         canvas.drawBitmap(trunk, trunkX, trunkY, null);
         for (int i = 0; i<coins.size(); i++) {
-            canvas.drawBitmap(coins.get(i).getCoin(coins.get(i).getCoinFrame()),coins.get(i).getCoinX(), coins.get(i).getCoinY(), null);
-            coins.get(i).setCoinFrame(+1);
-            if (coins.get(i).getCoinFrame()>2) {
-                coins.get(i).setCoinFrame(2);
+            canvas.drawBitmap(coins.get(i).getCoin(coins.get(i).coinFrame),coins.get(i).coinX, coins.get(i).coinY, null);
+            coins.get(i).coinFrame++;
+            if (coins.get(i).coinFrame>2) {
+                coins.get(i).coinFrame = 0;
             }
-            coins.get(i).setCoinY(+coins.get(i).getCoinVelocity());
-            if (coins.get(i).getCoinY()+coins.get(i).getCoinHeight()>=dHeight - ground.getHeight()) {
+            coins.get(i).coinY+=coins.get(i).coinVelocity;
+            if (coins.get(i).coinY+coins.get(i).getCoinHeght()>=dHeight - ground.getHeight()) {
                 points+=10;
-                Splashe splashe = new Splashe(context);
-                splashe.setSplasheX(coins.get(i).getCoinX());
-                splashe.setSplasheY(coins.get(i).getCoinY());
-                splashes.add(splashe);
+                Splash splash = new Splash(context);
+                splash.splashX = coins.get(i).coinX;
+                splash.splashY = coins.get(i).coinY;
+                splashes.add(splash);
                 coins.get(i).resetPosition();
             }
         }
 
         for (int i=0; i<coins.size(); i++) {
-            if (coins.get(i).getCoinX() + coins.get(i).getCoinWidth()>=trunkX
-                    && coins.get(i).getCoinX() <=trunkX + trunk.getWidth()
-                    && coins.get(i).getCoinY() + coins.get(i).getCoinWidth() >= trunkY
-                    && coins.get(i).getCoinY() + coins.get(i).getCoinWidth()<=trunkY+trunk.getHeight()) {
+            if (coins.get(i).coinX + coins.get(i).getCoinWidth()>=trunkX
+                    && coins.get(i).coinX <=trunkX + trunk.getWidth()
+                    && coins.get(i).coinY + coins.get(i).getCoinWidth() >= trunkY
+                    && coins.get(i).coinY + coins.get(i).getCoinWidth()<=trunkY+trunk.getHeight()) {
                 life--;
                 coins.get(i).resetPosition();
                 if (life==0) {
-                    Intent intent = new Intent(context, GameOver.class);
+                    @SuppressLint("DrawAllocation") Intent intent = new Intent(context, GameOver.class);
                     intent.putExtra("points", points);
                     context.startActivity(intent);
                     ((Activity) context).finish();
@@ -117,10 +117,10 @@ public class GameView extends View {
             }
         }
         for (int i =0; i<splashes.size(); i++) {
-            canvas.drawBitmap(splashes.get(i).getSplashe(splashes.get(i).getSplasheFrame()), splashes.get(i).getSplasheX(),
-                    splashes.get(i).getSplasheY(), null);
-            splashes.get(i).setSplasheFrame(+1);
-            if (splashes.get(i).getSplasheFrame()>2) {
+            canvas.drawBitmap(splashes.get(i).getSplashe(splashes.get(i).splashFrame), splashes.get(i).splashX,
+                    splashes.get(i).splashY, null);
+            splashes.get(i).splashFrame++;
+            if (splashes.get(i).splashFrame>2) {
                 splashes.remove(i);
             }
         }

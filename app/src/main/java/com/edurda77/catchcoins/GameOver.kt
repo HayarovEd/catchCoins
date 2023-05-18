@@ -22,8 +22,8 @@ class GameOver : AppCompatActivity() {
         ivNewHighest = findViewById(R.id.highest)
         restart = findViewById(R.id.restart)
         close = findViewById(R.id.exit)
-        val points = intent.extras!!.getInt("points")
-        tvPoints.setText(points)
+        val points = intent.extras?.getInt("points")?:0
+        tvPoints.text = points.toString()
         val sharedPreferences = getSharedPreferences("my_pref", 0)
         var highest = sharedPreferences.getInt("highest", 0)
         if (points > highest) {
@@ -33,7 +33,7 @@ class GameOver : AppCompatActivity() {
             editor.putInt("highest", highest)
             editor.commit()
         }
-        tvHighest.setText(highest)
+        tvHighest.text = highest.toString()
         restart.setOnClickListener {
             val intent =  Intent(this, MainActivity::class.java)
             startActivity(intent)
