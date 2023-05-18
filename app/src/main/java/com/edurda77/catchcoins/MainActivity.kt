@@ -25,6 +25,8 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
 import com.facebook.applinks.AppLinkData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
@@ -80,6 +82,9 @@ class MainActivity : AppCompatActivity() {
         Log.d ("AAAAA", "url?key=${b["5"]}&sub1=${b["1"]}&sub2=${b["2"]}&sub3=${b["3"]}&sub4=${b["4"]}&adv_id={adv_id}&apps_id={apps_id}")
 
         startButton.setOnClickListener {
+            AppsFlyerLib.getInstance().logEvent(
+                applicationContext,
+                AFInAppEventType.CONTENT_VIEW, b)
             gameView = GameView(this)
             setContentView(gameView)
         }

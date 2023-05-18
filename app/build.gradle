@@ -67,6 +67,8 @@ dependencies {
 
 
     implementation 'com.facebook.android:facebook-android-sdk:5.0.0'
+
+    implementation 'com.appsflyer:af-android-sdk:6.9.0'
 }
 
 kapt {
