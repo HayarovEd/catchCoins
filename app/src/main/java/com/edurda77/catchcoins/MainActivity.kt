@@ -75,7 +75,9 @@ class MainActivity : AppCompatActivity() {
             deeplink = getFacebookDeepLink()
         )*/
         val a  = "myapp://sub5=jaylgt1o35eslg8bin6y&sub1=SSS&sub2=CASUMOFI&sub3=SSS&sub4=CASUMOFI"
-        Log.d ("AAAAA", "${parseSub(a)}")
+        val b = parseSub(a)
+
+        Log.d ("AAAAA", "url?key=${b["5"]}&sub1=${b["1"]}&sub2=${b["2"]}&sub3=${b["3"]}&sub4=${b["4"]}&adv_id={adv_id}&apps_id={apps_id}")
 
         startButton.setOnClickListener {
             gameView = GameView(this)
