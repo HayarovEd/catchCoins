@@ -82,13 +82,18 @@ class MainActivity : AppCompatActivity() {
         Log.d ("AAAAA", "url?key=${b["5"]}&sub1=${b["1"]}&sub2=${b["2"]}&sub3=${b["3"]}&sub4=${b["4"]}&adv_id={adv_id}&apps_id={apps_id}")
 
         startButton.setOnClickListener {
-            AppsFlyerLib.getInstance().logEvent(
+            /*AppsFlyerLib.getInstance().logEvent(
                 applicationContext,
-                AFInAppEventType.CONTENT_VIEW, b)
+                AFInAppEventType.CONTENT_VIEW, b)*/
             gameView = GameView(this)
             setContentView(gameView)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AppsFlyerLib.getInstance().start(this)
     }
 
     fun parseSub(url:String): Map<String, String> {

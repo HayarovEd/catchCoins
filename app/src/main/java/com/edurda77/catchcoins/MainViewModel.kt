@@ -10,29 +10,33 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
+class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewModel() {
     private val _showData = MutableLiveData<MainState>(MainState.Loading)
     val showData = _showData
     //private val remoteConfig = Firebase.remoteConfig
 
+    init {
+        //getFromLocal()
+    }
     fun getFromLocal(
-        pathUrl: String = "",
-        checkedInternetConnection: Boolean,
-        vpnActive: Boolean,
-        batteryLevel: Int,
-        deeplink: String?
+        //pathUrl: String = "",
+        //checkedInternetConnection: Boolean,
+        //vpnActive: Boolean,
+        //batteryLevel: Int,
+        //deeplink: String?
     ) {
+        val pathUrl = repo.getDataFromSharedPreferences()
         if (pathUrl != "") {
-            if (checkedInternetConnection) {
+            if (repo.checkedInternetConnection()) {
                 _showData.value = MainState.Success(url = pathUrl)
 
             } else {
                 _showData.value = MainState.NoInternet
             }
         } else {
-            if (checkedInternetConnection) {
-                viewModelScope.launch {
-                    /*val configSettings = remoteConfigSettings {
+            if (repo.checkedInternetConnection()) {
+                /*viewModelScope.launch {
+                    val configSettings = remoteConfigSettings {
                         minimumFetchIntervalInSeconds = 3600
                     }
                     remoteConfig.setConfigSettingsAsync(configSettings)
@@ -47,10 +51,13 @@ class MainViewModel @Inject constructor() : ViewModel() {
                                         if (checkIsEmu() || resultUrl.isEmpty() || resultUrl2.isEmpty() || vpnActive || batteryLevel > 99) {
                                             _showData.value = MainState.Mock
                                         } else {
+                                            val deeplink = repo.getDeepLink()
                                             if (deeplink==null) {
                                                 _showData.value = MainState.Success(url = resultUrl)
                                             } else {
-                                                _showData.value = MainState.Success(url = "parseSub(resultUrl2)")
+                                                val subIds = parseSub(deeplink)
+                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id={adv_id}&apps_id={apps_id}"
+                                                _showData.value = MainState.Success(url = link)
                                             }
                                         }
                                     }
@@ -59,10 +66,13 @@ class MainViewModel @Inject constructor() : ViewModel() {
                                         if (checkIsEmu() || resultUrl.isEmpty() || resultUrl2.isEmpty() || batteryLevel > 99) {
                                             _showData.value = MainState.Mock
                                         } else {
+                                            val deeplink = repo.getDeepLink()
                                             if (deeplink==null) {
                                                 _showData.value = MainState.Success(url = resultUrl)
                                             } else {
-                                                _showData.value = MainState.Success(url = "parseSub(resultUrl2)")
+                                                val subIds = parseSub(deeplink)
+                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id={adv_id}&apps_id={apps_id}"
+                                                _showData.value = MainState.Success(url = link)
                                             }
                                         }
                                     }
@@ -73,8 +83,8 @@ class MainViewModel @Inject constructor() : ViewModel() {
                             }
                         }.addOnFailureListener {
                             _showData.value = MainState.NoInternet
-                        }*/
-                }
+                        }
+                }*/
 
             } else {
                 _showData.value = MainState.NoInternet
