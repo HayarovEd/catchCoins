@@ -93,7 +93,7 @@ public class SpaceShooter extends View {
             enemyShip.enemyVelocity *= -1;
         }
         if ((enemyShotAction == false) && (enemyShip.enemyX >= 200 + random.nextInt(400))) {
-            @SuppressLint("DrawAllocation") Shot shot = new Shot(context, enemyShip.getShipWidth() / 2, enemyShip.enemyY);
+            @SuppressLint("DrawAllocation") Shot shot = new Shot(context, enemyShip.enemyX+enemyShip.getShipWidth() / 2, enemyShip.enemyY);
             enemyShots.add(shot);
             enemyShotAction = true;
         }
