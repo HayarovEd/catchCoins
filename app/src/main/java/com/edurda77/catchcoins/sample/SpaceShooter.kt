@@ -29,18 +29,11 @@ class SpaceShooter(
     private val scorePaint = Paint()
     private val size = Point()
     private val random = Random()
-    private var screenWidth = size.x
-    private var screenHeight = size.y
+
     private var points = 0
     private var life = 3
     private var paused: Boolean = false
     private val ourShipImage = BitmapFactory.decodeResource(context.resources, R.drawable.our_rocket)
-    private val ourSpaceShip = OurSpaceShip(
-        ourSpaceImage = ourShipImage,
-        shipX = random.nextInt(screenWidth),
-        shipY = screenHeight - ourShipImage.height,
-        ourVelocity = random.nextInt(6)
-    )
     private val enemySpaceShip = EnemySpaceShip(
         imageShip = BitmapFactory.decodeResource(context.resources, R.drawable.ufo),
         enemyX = 200 + random.nextInt(400),
@@ -64,10 +57,18 @@ class SpaceShooter(
     } else {
         (getContext() as Activity).windowManager.defaultDisplay
     }
+    private val ourSpaceShip = OurSpaceShip(
+        ourSpaceImage = ourShipImage,
+        shipX = random.nextInt(display?.width?:0),
+        shipY = (display?.height?:0) - ourShipImage.height,
+        ourVelocity = random.nextInt(6)
+    )
 
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {
         display?.getSize(size)
+        val screenWidth = size.x
+        val screenHeight = size.y
         scorePaint.color = Color.RED
         scorePaint.textSize = TEXT_SIZE
         scorePaint.textAlign = Paint.Align.LEFT
@@ -79,10 +80,10 @@ class SpaceShooter(
         if (life == 0) {
             paused = true
             handler = null
-            val intent = Intent(context, GameEnd::class.java)
+           /* val intent = Intent(context, GameEnd::class.java)
             intent.putExtra("points", points)
             context.startActivity(intent)
-            (context as Activity).finish()
+            (context as Activity).finish()*/
             enemySpaceShip.enemyX += enemySpaceShip.enemyVelocity
             if (enemySpaceShip.enemyX + enemySpaceShip.imageShip.width >= screenWidth) {
                 enemySpaceShip.enemyVelocity *= -1

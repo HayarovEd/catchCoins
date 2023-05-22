@@ -27,6 +27,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
+import com.edurda77.catchcoins.sample.SpaceShooter
 import com.facebook.applinks.AppLinkData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var startButton: Button
     private lateinit var webView: WebView
     private lateinit var gameView: GameView
+    private lateinit var shooter: SpaceShooter
     private lateinit var warning: TextView
 
     private lateinit var currentState: MainState
@@ -85,8 +87,9 @@ class MainActivity : AppCompatActivity() {
             /*AppsFlyerLib.getInstance().logEvent(
                 applicationContext,
                 AFInAppEventType.CONTENT_VIEW, b)*/
+            shooter = SpaceShooter(this)
             gameView = GameView(this)
-            setContentView(gameView)
+            setContentView(shooter)
         }
 
     }
