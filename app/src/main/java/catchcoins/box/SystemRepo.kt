@@ -10,4 +10,6 @@ interface SystemRepo {
     fun checkedInternetConnection(): Boolean
 
     fun getDataFromSharedPreferences(): String
+
+    fun apsUid(): String
 }

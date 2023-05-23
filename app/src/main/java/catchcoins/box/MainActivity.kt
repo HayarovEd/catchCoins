@@ -26,8 +26,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.PackageManagerCompat.LOG_TAG
 import androidx.core.view.isVisible
 import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.edurda77.sample.SpaceShooter
 import com.facebook.applinks.AppLinkData
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,6 +70,10 @@ class MainActivity : AppCompatActivity() {
         warning = findViewById(R.id.warning)
         webView = findViewById(R.id.webView)
         progressBar = findViewById(R.id.progress)
+        apsStart(
+            context =  this,
+            devKey = "EFvkQNfBR8Yip9uHWXUd3F"
+        )
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         val sharedPref =
@@ -123,6 +129,26 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         AppsFlyerLib.getInstance().start(this)
+    }
+
+    fun apsStart(context: Context, devKey: String) {
+        AppsFlyerLib.getInstance().start(context, devKey, object :
+
+
+            AppsFlyerRequestListener {
+            override fun onSuccess() {
+                Log.d("LOG_TAG", "-------------------Launch sent successfully")
+
+            }
+
+            override fun onError(errorCode: Int, errorDesc: String) {
+                Log.d(
+                    "LOG_TAG", "-------------------------Launch failed to be sent:\n" +
+                            "Error code: " + errorCode + "\n"
+                            + "Error description: " + errorDesc
+                )
+            }
+        })
     }
 
     fun parseSub(url:String): Map<String, String> {

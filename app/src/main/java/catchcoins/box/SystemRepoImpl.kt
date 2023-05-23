@@ -8,6 +8,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.BatteryManager
 import android.os.Build
+import com.appsflyer.AppsFlyerLib
 import com.facebook.applinks.AppLinkData
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -89,6 +90,10 @@ class SystemRepoImpl @Inject constructor(private val application: Application) :
         val sharedPref =
             application.getSharedPreferences(SAVED_SETTINGS, Context.MODE_PRIVATE)
         return sharedPref.getString(URL, "")?:""
+    }
+
+    override fun apsUid(): String {
+        return AppsFlyerLib.getInstance().getAppsFlyerUID(application).toString()
     }
 
 }

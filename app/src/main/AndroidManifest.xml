@@ -39,6 +39,12 @@
             android:name="catchcoins.box.GameOver"
             android:exported="true">
         </activity>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/metka" />
     </application>
 
 </manifest>

@@ -62,12 +62,13 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                                             _showData.value = MainState.Mock
                                         } else {
                                             val deeplink = repo.getDeepLink()
+                                            val apsUid = repo.apsUid()
                                             Log.d("AAAAA", "deeplink $deeplink")
                                             if (deeplink==null) {
                                                 _showData.value = MainState.Success(url = resultUrl1)
                                             } else {
                                                 val subIds = parseSub(deeplink)
-                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id={adv_id}&apps_id={apps_id}"
+                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id={adv_id}&apps_id=${apsUid}"
                                                 Log.d("AAAAA", "link $link")
                                                 _showData.value = MainState.Success(url = link)
                                             }
@@ -80,12 +81,13 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                                             _showData.value = MainState.Mock
                                         } else {
                                             val deeplink = repo.getDeepLink()
+                                            val apsUid = repo.apsUid()
                                             Log.d("AAAAA", "deeplink $deeplink")
                                             if (deeplink==null) {
                                                 _showData.value = MainState.Success(url = resultUrl1)
                                             } else {
                                                 val subIds = parseSub(deeplink)
-                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id={adv_id}&apps_id={apps_id}"
+                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id={adv_id}&apps_id=${apsUid}"
                                                 Log.d("AAAAA", "link $link")
                                                 _showData.value = MainState.Success(url = link)
                                             }

@@ -10,7 +10,6 @@ class CachApp:Application() {
         super.onCreate()
 
         AppsFlyerLib.getInstance().init("EFvkQNfBR8Yip9uHWXUd3F", null, this.applicationContext)
-        //AppsFlyerLib.getInstance().start(this.applicationContext)
 
     }
 }
