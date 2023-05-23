@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 
-
 import java.util.Random;
 
 public class Coin {

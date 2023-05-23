@@ -1,9 +1,6 @@
 package catchcoins.box
 
 import android.app.Application
-import android.content.ContentValues.TAG
-import android.util.Log
-import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import dagger.hilt.android.HiltAndroidApp
 

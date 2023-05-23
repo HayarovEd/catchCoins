@@ -22,9 +22,11 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import com.appsflyer.AppsFlyerLib
 import com.edurda77.sample.SpaceShooter
 import com.facebook.applinks.AppLinkData
@@ -33,6 +35,7 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
+
 
 const val NO_INTERNET = "Need internet access"
 const val SAVED_SETTINGS = "settings"
@@ -49,40 +52,63 @@ class MainActivity : AppCompatActivity() {
     private lateinit var gameView: GameView
     private lateinit var spaceShoter: SpaceShooter
     private lateinit var warning: TextView
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var currentState: MainState
     private var mCameraPhotoPath = ""
     private var mCapturedImageURI: Uri = Uri.parse("")
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private var mUploadMessage: ValueCallback<Uri?>? = null
+    private var webViewState: Bundle? = null
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         startButton = findViewById(R.id.start)
         warning = findViewById(R.id.warning)
         webView = findViewById(R.id.webView)
+        progressBar = findViewById(R.id.progress)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         val sharedPref =
             this.getSharedPreferences(SAVED_SETTINGS, Context.MODE_PRIVATE)
         currentState = MainState.Loading
-        /*viewModel.getFromLocal(
-            pathUrl = sharedUrl ?: "",
-            checkedInternetConnection = checkedInternetConnection(),
-            vpnActive = vpnActive(this),
-            batteryLevel = getBatteryLevel(),
-            deeplink = getFacebookDeepLink()
-        )*/
-        val a  = "myapp://sub5=jaylgt1o35eslg8bin6y&sub1=SSS&sub2=CASUMOFI&sub3=SSS&sub4=CASUMOFI"
-        val b = parseSub(a)
         viewModel.showData.observe(this) {state->
             when (state) {
                 MainState.Loading -> {
+                    webView.isVisible = false
+                    progressBar.isVisible = false
+                    warning.isVisible = false
+                    startButton.isVisible = false
+                    currentState = state
+                }
+                MainState.Mock -> {
+                    webView.isVisible = false
+                    progressBar.isVisible = false
+                    warning.isVisible = false
+                    startButton.isVisible = true
+                    currentState = state
+                }
+                MainState.NoInternet -> {
+                    webView.isVisible = false
+                    progressBar.isVisible = false
+                    warning.isVisible = true
+                    startButton.isVisible = false
+                    currentState = state
+                    warning.text = "Need connect to Internet"
 
                 }
-                MainState.Mock -> TODO()
-                MainState.NoInternet -> TODO()
-                is MainState.Success -> TODO()
+                is MainState.Success -> {
+                    val editor = sharedPref.edit()
+                    editor.putString(URL, state.url)
+                    editor.apply()
+                    initWebView(savedInstanceState, state.url)
+                    webView.isVisible = true
+                    progressBar.isVisible = false
+                    warning.isVisible = false
+                    startButton.isVisible = false
+                    currentState = state
+                }
             }
         }
 
@@ -190,6 +216,7 @@ class MainActivity : AppCompatActivity() {
         val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
         if (savedInstanceState != null) {
+            webViewState = savedInstanceState.getBundle("webViewState")
             webView.restoreState(savedInstanceState)
         } else {
             webView.loadUrl(url)
@@ -211,8 +238,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        webView.saveState(outState)
         super.onSaveInstanceState(outState)
+        webViewState = Bundle()
+        webView.saveState(webViewState!!)
+        outState.putBundle("webViewState", webViewState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        webViewState = savedInstanceState.getBundle("webViewState")
+        webViewState?.let { webView.restoreState(it) }
     }
 
     override fun onBackPressed() {

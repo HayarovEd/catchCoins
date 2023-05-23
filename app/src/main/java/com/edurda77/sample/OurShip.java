@@ -8,6 +8,7 @@ import java.util.Random;
 
 import catchcoins.box.R;
 
+
 public class OurShip {
     Context context;
     Bitmap shipImage;

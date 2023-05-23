@@ -92,7 +92,7 @@ public class SpaceShooter extends View {
         if (enemyShip.enemyX <= 0) {
             enemyShip.enemyVelocity *= -1;
         }
-        if ((enemyShotAction == false) && (enemyShip.enemyX >= 200 + random.nextInt(400))) {
+        if ((!enemyShotAction) && (enemyShip.enemyX >= 200 + random.nextInt(400))) {
             @SuppressLint("DrawAllocation") Shot shot = new Shot(context, enemyShip.enemyX+enemyShip.getShipWidth() / 2, enemyShip.enemyY);
             enemyShots.add(shot);
             enemyShotAction = true;
@@ -100,7 +100,7 @@ public class SpaceShooter extends View {
         if (!enemyExplosion) {
             canvas.drawBitmap(enemyShip.getEnemyShip(), enemyShip.enemyX, enemyShip.enemyY, null);
         }
-        if (ourShip.isAlive = true) {
+        if (ourShip.isAlive) {
             if (ourShip.ourX > screenWidth - ourShip.getShipWidth()) {
                 ourShip.ourX = screenWidth - ourShip.getShipWidth();
             } else if (ourShip.ourX < 0) {
