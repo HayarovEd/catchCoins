@@ -1,4 +1,4 @@
-package com.edurda77.catchcoins
+package catchcoins.box
 
 interface SystemRepo {
     suspend fun getDeepLink(): String?

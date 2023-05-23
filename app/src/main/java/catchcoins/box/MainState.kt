@@ -1,4 +1,4 @@
-package com.edurda77.catchcoins
+package catchcoins.box
 
 sealed class MainState {
     class Success (

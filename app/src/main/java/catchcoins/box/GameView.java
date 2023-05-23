@@ -1,4 +1,4 @@
-package com.edurda77.catchcoins;
+package catchcoins.box;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

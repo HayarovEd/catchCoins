@@ -1,4 +1,4 @@
-package com.edurda77.catchcoins
+package catchcoins.box
 
 import android.content.Intent
 import android.os.Bundle

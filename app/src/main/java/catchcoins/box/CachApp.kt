@@ -1,4 +1,4 @@
-package com.edurda77.catchcoins
+package catchcoins.box
 
 import android.app.Application
 import android.content.ContentValues.TAG
@@ -12,7 +12,7 @@ class CachApp:Application() {
     override fun onCreate() {
         super.onCreate()
 
-        AppsFlyerLib.getInstance().init("M5VXFDha2tFitFYxbS4gYC", null, this.applicationContext)
+        AppsFlyerLib.getInstance().init("EFvkQNfBR8Yip9uHWXUd3F", null, this.applicationContext)
         //AppsFlyerLib.getInstance().start(this.applicationContext)
 
     }

@@ -1,4 +1,4 @@
-package com.edurda77.catchcoins
+package catchcoins.box
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -25,18 +25,14 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 import com.edurda77.sample.SpaceShooter
 import com.facebook.applinks.AppLinkData
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 const val NO_INTERNET = "Need internet access"
 const val SAVED_SETTINGS = "settings"
@@ -47,7 +43,7 @@ const val FILECHOOSER_RESULTCODE = 1
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    //private val viewModel by viewModels<MainViewModel>()
+    private val viewModel by viewModels<MainViewModel>()
     private lateinit var startButton: Button
     private lateinit var webView: WebView
     private lateinit var gameView: GameView
@@ -69,7 +65,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         val sharedPref =
             this.getSharedPreferences(SAVED_SETTINGS, Context.MODE_PRIVATE)
-        val sharedUrl = sharedPref.getString(URL, "")
         currentState = MainState.Loading
         /*viewModel.getFromLocal(
             pathUrl = sharedUrl ?: "",
@@ -80,16 +75,21 @@ class MainActivity : AppCompatActivity() {
         )*/
         val a  = "myapp://sub5=jaylgt1o35eslg8bin6y&sub1=SSS&sub2=CASUMOFI&sub3=SSS&sub4=CASUMOFI"
         val b = parseSub(a)
+        viewModel.showData.observe(this) {state->
+            when (state) {
+                MainState.Loading -> {
 
-        Log.d ("AAAAA", "url?key=${b["5"]}&sub1=${b["1"]}&sub2=${b["2"]}&sub3=${b["3"]}&sub4=${b["4"]}&adv_id={adv_id}&apps_id={apps_id}")
+                }
+                MainState.Mock -> TODO()
+                MainState.NoInternet -> TODO()
+                is MainState.Success -> TODO()
+            }
+        }
 
         startButton.setOnClickListener {
-            /*AppsFlyerLib.getInstance().logEvent(
-                applicationContext,
-                AFInAppEventType.CONTENT_VIEW, b)*/
             spaceShoter = SpaceShooter(this)
             gameView = GameView(this)
-            setContentView(spaceShoter)
+            setContentView(gameView)
         }
 
     }

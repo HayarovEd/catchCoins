@@ -1,8 +1,10 @@
-package com.edurda77.catchcoins;
+package catchcoins.box;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+
 
 import java.util.Random;
 

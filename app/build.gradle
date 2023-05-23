@@ -1,17 +1,17 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    //id 'com.google.gms.google-services'
+    id 'com.google.gms.google-services'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
 
 android {
-    namespace 'com.edurda77.catchcoins'
+    namespace 'catchcoins.box'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.edurda77.catchcoins"
+        applicationId "catchcoins.box"
         minSdk 21
         targetSdk 33
         versionCode 1
@@ -61,9 +61,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
 
     //FireBase
-    //implementation platform('com.google.firebase:firebase-bom:31.2.0')
-    //implementation 'com.google.firebase:firebase-analytics-ktx'
-    //implementation 'com.google.firebase:firebase-config-ktx:21.3.0'
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-config-ktx:21.3.0'
 
 
     implementation 'com.facebook.android:facebook-android-sdk:5.0.0'

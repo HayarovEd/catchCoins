@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.edurda77.catchcoins.R;
+import catchcoins.box.R;
 
 public class Explosion {
     Bitmap[] explosionImages = new Bitmap[12];

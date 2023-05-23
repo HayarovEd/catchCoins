@@ -15,8 +15,8 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.edurda77.catchcoins.GameOver;
-import com.edurda77.catchcoins.R;
+import catchcoins.box.GameOver;
+import catchcoins.box.R;
 
 import java.util.ArrayList;
 import java.util.Random;
