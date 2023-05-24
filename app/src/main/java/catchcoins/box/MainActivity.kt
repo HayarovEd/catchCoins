@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
             spaceShoter = SpaceShooter(this)
             gameView = GameView(this)
             gameViewQ = GameViewQ(this)
-            setContentView(gameViewQ)
+            setContentView(gameView)
         }
 
     }

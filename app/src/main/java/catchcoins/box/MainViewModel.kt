@@ -16,12 +16,12 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewModel() {
-    private val _showData = MutableLiveData<MainState>(MainState.Mock)
+    private val _showData = MutableLiveData<MainState>(MainState.Loading)
     val showData = _showData
     private val remoteConfig = Firebase.remoteConfig
 
     init {
-        //getFromLocal()
+        getFromLocal()
     }
     private fun getFromLocal() {
         val pathUrl = repo.getDataFromSharedPreferences()
@@ -42,7 +42,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                         minimumFetchIntervalInSeconds = 3600
                     }
                     remoteConfig.setConfigSettingsAsync(configSettings)
-                    val deeplink = "myapp://sub5=88m5wa69aaajqrf1c1yu&sub1=SSS&sub2=CASUMOFI&sub3=SSS&sub4=CASUMOFI"//repo.getDeepLink()
+                    val deeplink = repo.getDeepLink()
                     println("deeplink $deeplink")
                     remoteConfig.fetchAndActivate()
                         .addOnCompleteListener {
@@ -66,7 +66,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                                         val subIds = parseSub(deeplink)
                                         val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id=${advId}&apps_id=${apsUid}"
                                         Log.d("AAAAA", "link $link")
-                                        println("link $link")
+                                        println("resultLink $link")
                                         _showData.value = MainState.Success(url = link)
                                     }
                                 }
