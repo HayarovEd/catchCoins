@@ -13,6 +13,7 @@ import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.Random;
@@ -119,10 +120,80 @@ public class GameViewQ extends View {
                 launchGameOver();
             }
             if (((ballX +ball.getWidth())>= paddleX)
-            && (ballX<=paddleX+paddle.getWidth())) {
-
+            && (ballX<=paddleX+paddle.getWidth())
+            && (ballY+ball.getHeight()>=paddleY)
+            && (ballY+ball.getHeight()<=paddleY+paddle.getHeight())) {
+                if (mpHit!=null) {
+                    mpHit.start();
+                }
+                velocity.setX(velocity.getX()+1);
+                velocity.setY((velocity.getY()+1)*-1);
+            }
+            canvas.drawBitmap(ball, ballX, ballY, null);
+            canvas.drawBitmap(paddle, paddleX, paddleY, null);
+            for (int i=0; i<numBricks; i++) {
+                if (bricks[i].getVisibility()) {
+                    canvas.drawRect(bricks[i].column * bricks[i].width+1, bricks[i].row*bricks[i].height+1, bricks[i].column*bricks[i].width+bricks[i].width-1,bricks[i].row*bricks[i].height+bricks[i].height-1, brickPaint);
+                }
+            }
+            canvas.drawText(""+points, 20, TEXT_SIZE, textPaint);
+            if (life==2) {
+                healthPaint.setColor(Color.YELLOW);
+            } else if (life==1) {
+                healthPaint.setColor(Color.RED);
+            }
+            canvas.drawRect(dWidth-200, 30, dWidth-200+60*life, 80, healthPaint);
+            for (int i=0; i<numBricks; i++) {
+                if (bricks[i].getVisibility()) {
+                    if (ballX+ballWidth>=bricks[i].column*bricks[i].width
+                    &&ballX<=bricks[i].column*bricks[i].width+bricks[i].width
+                    &&ballY<=bricks[i].row*bricks[i].height+bricks[i].height
+                    &&ballY>=bricks[i].row*bricks[i].height) {
+                        if (mpBreak!=null) {
+                            mpBreak.start();
+                        }
+                        velocity.setY((velocity.getY()+1)*-1);
+                        bricks[i].setInvisible();
+                        points+=10;
+                        brokenBricks++;
+                        if (brokenBricks==24) {
+                            launchGameOver();
+                        }
+                    }
+                }
+            }
+            if (brokenBricks==numBricks) {
+                gameOver = true;
+            }
+            if (!gameOver) {
+                handler.postDelayed(runnable, UPDATE_MILLS);
             }
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float touchX = event.getX();
+        float touchY = event.getY();
+        if (touchY>=paddleY) {
+            int action = event.getAction();
+            if (action==MotionEvent.ACTION_DOWN) {
+                oldX=event.getX();
+                oldPaddleX = paddleX;
+            }
+            if (action==MotionEvent.ACTION_MOVE) {
+                float shift = oldX - touchX;
+                float newPaddleX = oldPaddleX - shift;
+                if (newPaddleX<=0) {
+                    paddleX=0;
+                } else  if (newPaddleX>=dWidth-paddle.getWidth()) {
+                    paddleX = dWidth-paddle.getWidth();
+                } else {
+                    paddleX = newPaddleX;
+                }
+            }
+        }
+        return true;
     }
 
     private void launchGameOver() {
