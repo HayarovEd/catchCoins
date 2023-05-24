@@ -10,6 +10,10 @@ import android.os.BatteryManager
 import android.os.Build
 import com.appsflyer.AppsFlyerLib
 import com.facebook.applinks.AppLinkData
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import java.io.IOException
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -94,6 +98,28 @@ class SystemRepoImpl @Inject constructor(private val application: Application) :
 
     override fun apsUid(): String {
         return AppsFlyerLib.getInstance().getAppsFlyerUID(application).toString()
+    }
+
+    override fun getAdvertisingId(): String? {
+        var advertisingId: String? = null
+
+        val thread = Thread {
+            try {
+                val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(application)
+                advertisingId = advertisingIdInfo.id
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: GooglePlayServicesNotAvailableException) {
+                e.printStackTrace()
+            } catch (e: GooglePlayServicesRepairableException) {
+                e.printStackTrace()
+            }
+        }
+
+        thread.start()
+        thread.join()
+
+        return advertisingId
     }
 
 }

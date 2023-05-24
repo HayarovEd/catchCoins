@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         AppsFlyerLib.getInstance().start(this)
     }
 
-    fun apsStart(context: Context, devKey: String) {
+    private fun apsStart(context: Context, devKey: String) {
         AppsFlyerLib.getInstance().start(context, devKey, object :
 
 

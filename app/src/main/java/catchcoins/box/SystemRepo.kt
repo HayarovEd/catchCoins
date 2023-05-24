@@ -12,4 +12,6 @@ interface SystemRepo {
     fun getDataFromSharedPreferences(): String
 
     fun apsUid(): String
+
+    fun getAdvertisingId(): String?
 }
