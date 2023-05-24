@@ -1,11 +1,11 @@
 package com.edurda77.sample2;
 
 public class Brick {
-    private  boolean isVisisble;
+    private  boolean isVisible;
     public  int row, column, width, height;
 
     public Brick(int row, int column, int width, int height) {
-        isVisisble = true;
+        isVisible = true;
         this.row = row;
         this.column = column;
         this.width = width;
@@ -13,9 +13,9 @@ public class Brick {
     }
 
     public  void setInvisible(){
-        isVisisble = false;
+        isVisible = false;
     }
     public boolean getVisibility() {
-        return isVisisble;
+        return isVisible;
     }
 }

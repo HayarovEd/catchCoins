@@ -31,6 +31,7 @@ import androidx.core.view.isVisible
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.edurda77.sample.SpaceShooter
+import com.edurda77.sample2.GameViewQ
 import com.facebook.applinks.AppLinkData
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -53,6 +54,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private lateinit var gameView: GameView
     private lateinit var spaceShoter: SpaceShooter
+    private lateinit var gameViewQ: GameViewQ
     private lateinit var warning: TextView
     private lateinit var progressBar: ProgressBar
 
@@ -121,7 +123,8 @@ class MainActivity : AppCompatActivity() {
         startButton.setOnClickListener {
             spaceShoter = SpaceShooter(this)
             gameView = GameView(this)
-            setContentView(gameView)
+            gameViewQ = GameViewQ(this)
+            setContentView(gameViewQ)
         }
 
     }

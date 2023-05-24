@@ -84,10 +84,10 @@ public class GameViewQ extends View {
     }
 
     private void createBricks() {
-        int brickWidth = dWidth/2;
-        int brickHeight = dHeigth/2;
+        int brickWidth = dWidth/8;
+        int brickHeight = dHeigth/16;
         for (int column = 0; column<8; column++) {
-            for (int row = 0; row<8; row++) {
+            for (int row = 0; row<3; row++) {
                bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
                numBricks++;
             }
@@ -108,8 +108,8 @@ public class GameViewQ extends View {
         }
         if (ballY>paddleY+ paddle.getHeight()) {
             ballX = 1+ random.nextInt(dWidth - ball.getWidth()-1);
-            ballY = dHeigth/3;
-            if (mpMiss!=null) {
+            ballY = dHeigth / 3;
+            if (mpMiss != null) {
                 mpMiss.start();
             }
             velocity.setX(xVelocity());
@@ -119,6 +119,7 @@ public class GameViewQ extends View {
                 gameOver = true;
                 launchGameOver();
             }
+        }
             if (((ballX +ball.getWidth())>= paddleX)
             && (ballX<=paddleX+paddle.getWidth())
             && (ballY+ball.getHeight()>=paddleY)
@@ -169,7 +170,7 @@ public class GameViewQ extends View {
                 handler.postDelayed(runnable, UPDATE_MILLS);
             }
         }
-    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
