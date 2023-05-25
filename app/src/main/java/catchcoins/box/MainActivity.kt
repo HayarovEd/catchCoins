@@ -107,10 +107,11 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 is MainState.Success -> {
-                    val editor = sharedPref.edit()
+                    /*val editor = sharedPref.edit()
                     editor.putString(URL, state.url)
                     editor.apply()
-                    initWebView(savedInstanceState, state.url)
+                    initWebView(savedInstanceState, state.url)*/
+                    Toast.makeText(this, state.url, Toast.LENGTH_LONG).show()
                     webView.isVisible = true
                     progressBar.isVisible = false
                     warning.isVisible = false

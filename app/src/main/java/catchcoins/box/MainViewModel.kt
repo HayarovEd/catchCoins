@@ -57,7 +57,8 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
 
                                 println("apsUid $apsUid")
                                 println("advId $advId")
-                                if ((resultUrl1.isEmpty() && resultUrl2.isEmpty())) {
+                                _showData.value = MainState.Success("advId $advId")
+                                /*if ((resultUrl1.isEmpty() && resultUrl2.isEmpty())) {
                                     _showData.value = MainState.Mock
                                 } else {
                                     //val deeplink = repo.getDeepLink()
@@ -71,7 +72,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                                         println("resultLink $link")
                                         _showData.value = MainState.Success(url = link)
                                     }
-                                }
+                                }*/
                                 /*//val vpnActive = repo.vpnActive()
                                 //val batteryLevel = repo.getBatteryLevel()
                                 Log.d("AAAAA", "isCheckedVpn $isCheckedVpn")

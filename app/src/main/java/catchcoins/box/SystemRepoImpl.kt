@@ -104,15 +104,17 @@ class SystemRepoImpl @Inject constructor(private val application: Application) :
         var advertisingId: String? = null
 
         val thread = Thread {
-            try {
-                val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(application)
-                advertisingId = advertisingIdInfo.id
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: GooglePlayServicesNotAvailableException) {
-                e.printStackTrace()
-            } catch (e: GooglePlayServicesRepairableException) {
-                e.printStackTrace()
+            kotlin.run {
+                try {
+                    val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(application)
+                    advertisingId = advertisingIdInfo.id
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                } catch (e: GooglePlayServicesNotAvailableException) {
+                    e.printStackTrace()
+                } catch (e: GooglePlayServicesRepairableException) {
+                    e.printStackTrace()
+                }
             }
         }
 
