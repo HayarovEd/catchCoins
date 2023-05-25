@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             when (state) {
                 MainState.Loading -> {
                     webView.isVisible = false
-                    progressBar.isVisible = false
+                    progressBar.isVisible = true
                     warning.isVisible = false
                     startButton.isVisible = false
                     currentState = state
@@ -154,92 +154,11 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun parseSub(url:String): Map<String, String> {
-        val regex = Regex("""(?<=sub)\d+=([^&]+)""")
-        val matches = regex.findAll(url)
-        val subIds = mutableMapOf<String, String>()
 
-        for (match in matches) {
-            val key = match.groupValues[0][0].toString()
-            val value = match.groupValues[1]
-            subIds[key] = value
-        }
-        return subIds
-    }
-    private fun getFacebookDeepLink(): String? {
-        return try {
-            var appLinkData:String? = null
-            AppLinkData.fetchDeferredAppLinkData(this) {
-                appLinkData = it.targetUri.toString()
-            }
-            appLinkData
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    private fun vpnActive(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val activeNetwork = connectivityManager.activeNetwork
-            val caps = connectivityManager.getNetworkCapabilities(activeNetwork)
-            if (caps != null) {
-                return caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
-            }
-        } else {
-            val networkInfo = connectivityManager.activeNetworkInfo
-            if (networkInfo != null) {
-                return networkInfo.type == ConnectivityManager.TYPE_VPN
-            }
-        }
-        return false
-    }
-
-
-    private fun getBatteryLevel(): Int {
-        val iFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        val batteryStatus = applicationContext.registerReceiver(null, iFilter)
-        val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-        val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        return (level ?: 0) * 100 / (scale ?: 0)
-    }
-
-    private fun checkedInternetConnection(): Boolean {
-        var result = false
-        val connectivityManager =
-            this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val networkCapabilities = connectivityManager.activeNetwork ?: return false
-            val actNw =
-                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
-            result = when {
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        } else {
-            connectivityManager.run {
-                connectivityManager.activeNetworkInfo?.run {
-                    result = when (type) {
-                        ConnectivityManager.TYPE_WIFI -> true
-                        ConnectivityManager.TYPE_MOBILE -> true
-                        ConnectivityManager.TYPE_ETHERNET -> true
-                        else -> false
-                    }
-
-                }
-            }
-        }
-
-        return result
-    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView(savedInstanceState: Bundle?, url: String) {
-        webView = findViewById(R.id.webView)
+        //webView = findViewById(R.id.webView)
         webView.webViewClient = WebViewClient()
         webView.webChromeClient = this.ChromeClient()
         val webSettings = webView.settings

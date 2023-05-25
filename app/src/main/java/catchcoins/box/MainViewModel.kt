@@ -38,29 +38,31 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
         } else {
             if (checkInternet) {
                 viewModelScope.launch {
+                    val deeplink = ""//repo.getDeepLink()
                     val configSettings = remoteConfigSettings {
                         minimumFetchIntervalInSeconds = 3600
                     }
                     remoteConfig.setConfigSettingsAsync(configSettings)
-                    val deeplink = repo.getDeepLink()
                     println("deeplink $deeplink")
+                    val apsUid = repo.apsUid()
+                    val advId = repo.getAdvertisingId()
                     remoteConfig.fetchAndActivate()
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
                                 //val isCheckedVpn = false//remoteConfig.getBoolean("to")
-                                val resultUrl1 = remoteConfig.getString("url1")
-                                val resultUrl2 = remoteConfig.getString("url2")
+                                val resultUrl1 = "https://ya.ru/"//remoteConfig.getString("url1")
+                                val resultUrl2 = "https://www.google.com/"//remoteConfig.getString("url2")
                                 println("Url1 $resultUrl1")
                                 println("Url2 $resultUrl2")
+
+                                println("apsUid $apsUid")
+                                println("advId $advId")
                                 if ((resultUrl1.isEmpty() && resultUrl2.isEmpty())) {
                                     _showData.value = MainState.Mock
                                 } else {
                                     //val deeplink = repo.getDeepLink()
-                                    val apsUid = repo.apsUid()
-                                    val advId = repo.getAdvertisingId()
-                                    println("apsUid $apsUid")
-                                    println("advId $advId")
-                                    if (deeplink==null||advId==null) {
+
+                                    if (deeplink==null) {
                                         _showData.value = MainState.Success(url = resultUrl1)
                                     } else {
                                         val subIds = parseSub(deeplink)
