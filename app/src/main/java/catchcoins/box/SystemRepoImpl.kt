@@ -15,21 +15,27 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import java.io.IOException
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class SystemRepoImpl @Inject constructor(private val application: Application) : SystemRepo {
-    override suspend fun getDeepLink(): String? {
-        return try {
-            val appLinkData = suspendCoroutine<AppLinkData?> { continuation ->
-                AppLinkData.fetchDeferredAppLinkData(application) { result ->
-                    continuation.resume(result)
-                }
+
+    override fun myDeepLink(): Pair<String?, String?> {
+        var deeplinkAndAdvId: Pair<String?, String?> = Pair(null, null)
+        getDeepLink { deepLink ->
+            val advId = getAdvertisingId()
+            deeplinkAndAdvId= Pair(deepLink, advId)
+        }
+        return deeplinkAndAdvId
+    }
+
+    private fun getDeepLink(callback: (String?) -> Unit) {
+        AppLinkData.fetchDeferredAppLinkData(application) { appLinkData ->
+            if (appLinkData != null) {
+                val targetUri = appLinkData.targetUri
+                val deepLink = targetUri.toString()
+                callback(deepLink)
+            } else {
+                callback(null)
             }
-            appLinkData?.targetUri?.toString()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
         }
     }
 
@@ -100,26 +106,29 @@ class SystemRepoImpl @Inject constructor(private val application: Application) :
         return AppsFlyerLib.getInstance().getAppsFlyerUID(application).toString()
     }
 
-    override fun getAdvertisingId(): String? {
+    private fun getAdvertisingId(): String? {
         var advertisingId: String? = null
 
         val thread = Thread {
-            kotlin.run {
-                try {
-                    val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(application)
-                    advertisingId = advertisingIdInfo.id
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                } catch (e: GooglePlayServicesNotAvailableException) {
-                    e.printStackTrace()
-                } catch (e: GooglePlayServicesRepairableException) {
-                    e.printStackTrace()
-                }
+            try {
+                val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(application)
+                advertisingId = advertisingIdInfo.id
+            } catch (e: IOException) {
+                e.printStackTrace()
+                System.err.println(e)
+            } catch (e: GooglePlayServicesNotAvailableException) {
+                e.printStackTrace()
+                System.err.println(e)
+            } catch (e: GooglePlayServicesRepairableException) {
+                e.printStackTrace()
+                System.err.println(e)
             }
+
+
         }
 
         thread.start()
-        thread.join()
+        thread.join() // Дождитесь завершения потока, если вам нужно получить результат
 
         return advertisingId
     }
