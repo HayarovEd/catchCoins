@@ -117,9 +117,6 @@ class MainActivity : AppCompatActivity() {
                     deeplink = deepLink,
                     advId = advId
                 )
-                Log.d("AAAAAA", "advId $advId")
-                Log.d("AAAAAA", "deepLink $deepLink")
-
             }}
 
         super.onCreate(savedInstanceState)
@@ -166,8 +163,8 @@ class MainActivity : AppCompatActivity() {
                 is MainState.Success -> {
                     /*val editor = sharedPref.edit()
                     editor.putString(URL, state.url)
-                    editor.apply()
-                    initWebView(savedInstanceState, state.url)*/
+                    editor.apply()*/
+                    initWebView(savedInstanceState, state.url)
                     Toast.makeText(this, state.url, Toast.LENGTH_LONG).show()
                     webView.isVisible = true
                     progressBar.isVisible = false
