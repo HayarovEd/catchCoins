@@ -2,7 +2,7 @@ package catchcoins.box
 
 interface SystemRepo {
 
-    fun myDeepLink(): Pair<String?, String?>
+    suspend fun myDeepLink(): Pair<String?, String?>
     //fun getDeepLink(callback: (String?) -> Unit)
 
     fun vpnActive(): Boolean

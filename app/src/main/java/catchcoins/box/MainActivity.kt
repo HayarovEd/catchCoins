@@ -33,6 +33,9 @@ import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.edurda77.sample.SpaceShooter
 import com.edurda77.sample2.GameViewQ
 import com.facebook.applinks.AppLinkData
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
@@ -66,8 +69,59 @@ class MainActivity : AppCompatActivity() {
     private var webViewState: Bundle? = null
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
+        fun getAdvertisingId(): String? {
+            var advertisingId: String? = null
+
+            val thread = Thread {
+                try {
+                    val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(application)
+                    advertisingId = advertisingIdInfo.id
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    System.err.println(e)
+                } catch (e: GooglePlayServicesNotAvailableException) {
+                    e.printStackTrace()
+                    System.err.println(e)
+                } catch (e: GooglePlayServicesRepairableException) {
+                    e.printStackTrace()
+                    System.err.println(e)
+                }
+
+
+
+            }
+
+            thread.start()
+            thread.join() // Дождитесь завершения потока, если вам нужно получить результат
+
+            return advertisingId
+        }
+
+        fun getFacebookDeepLink(callback: (String?) -> Unit) {
+            AppLinkData.fetchDeferredAppLinkData(application) { appLinkData ->
+                if (appLinkData != null) {
+                    val targetUri = appLinkData.targetUri
+                    val deepLink = targetUri.toString()
+                    callback(deepLink)
+                } else {
+                    callback(null)
+                }
+            }
+        }
+        fun myDeepLink() {
+
+            getFacebookDeepLink { deepLink ->
+
+                val advId = getAdvertisingId()
+
+                Log.d("AAAAAA", "advId $advId")
+                Log.d("AAAAAA", "deepLink $deepLink")
+
+            }}
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        myDeepLink()
         startButton = findViewById(R.id.start)
         warning = findViewById(R.id.warning)
         webView = findViewById(R.id.webView)

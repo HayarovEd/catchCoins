@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class SystemRepoImpl @Inject constructor(private val application: Application) : SystemRepo {
 
-    override fun myDeepLink(): Pair<String?, String?> {
+    override suspend fun myDeepLink(): Pair<String?, String?> {
         var deeplinkAndAdvId: Pair<String?, String?> = Pair(null, null)
         getDeepLink { deepLink ->
             val advId = getAdvertisingId()

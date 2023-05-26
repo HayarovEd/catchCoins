@@ -38,14 +38,15 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
         } else {
             if (checkInternet) {
                 viewModelScope.launch {
-                    val deeplink = ""//repo.getDeepLink()
+                    val deeplinkAndAdvId = repo.myDeepLink()
                     val configSettings = remoteConfigSettings {
                         minimumFetchIntervalInSeconds = 3600
                     }
+                    val deeplink = deeplinkAndAdvId.first
+                    val advId = deeplinkAndAdvId.second
                     remoteConfig.setConfigSettingsAsync(configSettings)
                     println("deeplink $deeplink")
                     val apsUid = repo.apsUid()
-                    val advId = repo.getAdvertisingId()
                     remoteConfig.fetchAndActivate()
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
@@ -57,7 +58,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
 
                                 println("apsUid $apsUid")
                                 println("advId $advId")
-                                _showData.value = MainState.Success("advId $advId")
+                                _showData.value = MainState.Success("advId $advId deeplink $deeplink")
                                 /*if ((resultUrl1.isEmpty() && resultUrl2.isEmpty())) {
                                     _showData.value = MainState.Mock
                                 } else {
