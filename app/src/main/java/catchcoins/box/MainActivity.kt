@@ -113,7 +113,10 @@ class MainActivity : AppCompatActivity() {
             getFacebookDeepLink { deepLink ->
 
                 val advId = getAdvertisingId()
-
+                viewModel.getFromLocal(
+                    deeplink = deepLink,
+                    advId = advId
+                )
                 Log.d("AAAAAA", "advId $advId")
                 Log.d("AAAAAA", "deepLink $deepLink")
 

@@ -21,9 +21,12 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
     private val remoteConfig = Firebase.remoteConfig
 
     init {
-        getFromLocal()
+        //getFromLocal()
     }
-    private fun getFromLocal() {
+    fun getFromLocal(
+        deeplink: String?,
+        advId: String?
+    ) {
         val pathUrl = repo.getDataFromSharedPreferences()
         val checkInternet = repo.checkedInternetConnection()
         Log.d("AAAAA", "pathUrl $pathUrl")
@@ -42,8 +45,8 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                     val configSettings = remoteConfigSettings {
                         minimumFetchIntervalInSeconds = 3600
                     }
-                    val deeplink = deeplinkAndAdvId.first
-                    val advId = deeplinkAndAdvId.second
+                    //val deeplink = deeplinkAndAdvId.first
+                    //val advId = deeplinkAndAdvId.second
                     remoteConfig.setConfigSettingsAsync(configSettings)
                     println("deeplink $deeplink")
                     val apsUid = repo.apsUid()
