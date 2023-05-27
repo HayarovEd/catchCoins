@@ -147,22 +147,20 @@ public class GameView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         float touchX  = event.getX();
         float touchY = event.getY();
-        if (touchY>=trunkY) {
-            int action = event.getAction();
-            if (action == MotionEvent.ACTION_DOWN) {
-                oldX = event.getX();
-                oldTrunkX = trunkX;
-            }
-            if (action == MotionEvent.ACTION_MOVE) {
-               float shift = oldX - touchX;
-               float newTrunkX = oldTrunkX - shift;
-               if (newTrunkX<=0) {
-                   trunkX =0;
-               } else if (newTrunkX>=dWidth - trunk.getWidth()) {
-                   trunkX = dWidth - trunk.getWidth();
-               } else {
-                   trunkX = newTrunkX;
-               }
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN) {
+            oldX = event.getX();
+            oldTrunkX = trunkX;
+        }
+        if (action == MotionEvent.ACTION_MOVE) {
+            float shift = oldX - touchX;
+            float newTrunkX = oldTrunkX - shift;
+            if (newTrunkX<=0) {
+                trunkX =0;
+            } else if (newTrunkX>=dWidth - trunk.getWidth()) {
+                trunkX = dWidth - trunk.getWidth();
+            } else {
+                trunkX = newTrunkX;
             }
         }
         return true;

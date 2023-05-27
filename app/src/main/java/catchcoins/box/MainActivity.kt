@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        myDeepLink()
+        //myDeepLink()
         startButton = findViewById(R.id.start)
         warning = findViewById(R.id.warning)
         webView = findViewById(R.id.webView)

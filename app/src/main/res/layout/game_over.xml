@@ -52,9 +52,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/red"
         android:text="Your Points"
         android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@id/guideline"/>
+        app:layout_constraintBottom_toTopOf="@id/pointsTv"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/pointsTv"
@@ -62,8 +63,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf = "@+id/yourPoints"
-        android:textColor="@color/blue"
+        app:layout_constraintBottom_toTopOf="@id/HighestPoints"
+        android:textColor="@color/red"
         android:text="50"
         android:fontFamily="@font/kenney_high"
         android:textSize="50sp"/>
@@ -74,9 +75,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/red"
         android:text="Highest"
         android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@id/pointsTv"/>
+        app:layout_constraintBottom_toTopOf="@id/highestTv"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/highestTv"
@@ -84,8 +86,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf = "@+id/HighestPoints"
-        android:textColor="@color/blue"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        android:textColor="@color/red"
         android:text="100"
         android:fontFamily="@font/kenney_high"
         android:textSize="24sp"/>

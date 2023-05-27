@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewModel() {
-    private val _showData = MutableLiveData<MainState>(MainState.Loading)
+    private val _showData = MutableLiveData<MainState>(MainState.Mock)
     val showData = _showData
     private val remoteConfig = Firebase.remoteConfig
 
