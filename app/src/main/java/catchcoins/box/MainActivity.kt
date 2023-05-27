@@ -92,8 +92,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             thread.start()
-            thread.join() // Дождитесь завершения потока, если вам нужно получить результат
-
+            thread.join()
             return advertisingId
         }
 
@@ -113,15 +112,19 @@ class MainActivity : AppCompatActivity() {
             getFacebookDeepLink { deepLink ->
 
                 val advId = getAdvertisingId()
-                viewModel.getFromLocal(
-                    deeplink = deepLink,
-                    advId = advId
-                )
+                Log.d("AAAAAA", "deeplink $deepLink")
+                Log.d("AAAAAA", "advId $advId")
+                runOnUiThread {
+                    viewModel.getFromLocal(
+                        deeplink = deepLink,
+                        advId = advId
+                    )
+                }
             }}
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //myDeepLink()
+        myDeepLink()
         startButton = findViewById(R.id.start)
         warning = findViewById(R.id.warning)
         webView = findViewById(R.id.webView)
@@ -161,11 +164,10 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 is MainState.Success -> {
-                    /*val editor = sharedPref.edit()
+                    val editor = sharedPref.edit()
                     editor.putString(URL, state.url)
-                    editor.apply()*/
+                    editor.apply()
                     initWebView(savedInstanceState, state.url)
-                    Toast.makeText(this, state.url, Toast.LENGTH_LONG).show()
                     webView.isVisible = true
                     progressBar.isVisible = false
                     warning.isVisible = false
