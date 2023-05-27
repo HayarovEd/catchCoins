@@ -15,6 +15,8 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class SystemRepoImpl @Inject constructor(private val application: Application) : SystemRepo {
 
@@ -27,6 +29,18 @@ class SystemRepoImpl @Inject constructor(private val application: Application) :
         return deeplinkAndAdvId
     }
 
+    override suspend fun getFacebookDeepLink(): String? {
+        return try {
+            val appLinkData = suspendCoroutine<AppLinkData?> { continuation ->
+                AppLinkData.fetchDeferredAppLinkData(application) { result ->
+                    continuation.resume(result)
+                }
+            }
+            appLinkData?.targetUri?.toString()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }}
     private fun getDeepLink(callback: (String?) -> Unit) {
         AppLinkData.fetchDeferredAppLinkData(application) { appLinkData ->
             if (appLinkData != null) {

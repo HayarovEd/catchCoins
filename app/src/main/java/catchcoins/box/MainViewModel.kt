@@ -26,6 +26,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
     ) {
         val pathUrl = repo.getDataFromSharedPreferences()
         val checkInternet = repo.checkedInternetConnection()
+        //val deeplink = "myapp://sub5=jaylgt1o35eslg8bin6y&sub1=SSS&sub2=CASUMOFI&sub3=SSS&sub4=CASUMOFI"
         Log.d("AAAAAA", "deeplink $deeplink")
         Log.d("AAAAAA", "advId $advId")
         if (pathUrl != "") {
