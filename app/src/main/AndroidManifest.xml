@@ -21,6 +21,7 @@
     <application
         android:name="catchcoins.box.CachApp"
         android:allowBackup="true"
+        android:configChanges="orientation|screenSize"
         tools:replace="android:fullBackupContent"
         android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
