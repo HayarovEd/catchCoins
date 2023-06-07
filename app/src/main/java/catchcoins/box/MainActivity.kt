@@ -15,6 +15,8 @@ import android.os.Environment
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import android.webkit.CookieManager
 import android.webkit.ValueCallback
@@ -25,8 +27,13 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.core.content.PackageManagerCompat.LOG_TAG
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
@@ -67,12 +74,11 @@ class MainActivity : AppCompatActivity() {
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private var mUploadMessage: ValueCallback<Uri?>? = null
     private var webViewState: Bundle? = null
+    @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         @SuppressLint("AppCompatMethod")
         fun getAdvertisingId(): String? {
-            supportActionBar?.hide()
-            actionBar?.hide()
             var advertisingId: String? = null
 
             val thread = Thread {
@@ -131,6 +137,7 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        hideSystemUI()
         myDeepLink()
         startButton = findViewById(R.id.start)
         warning = findViewById(R.id.warning)
@@ -141,7 +148,6 @@ class MainActivity : AppCompatActivity() {
             devKey = "EFvkQNfBR8Yip9uHWXUd3F"
         )
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        supportActionBar?.hide()
         val sharedPref =
             this.getSharedPreferences(SAVED_SETTINGS, Context.MODE_PRIVATE)
         currentState = MainState.Loading
@@ -192,6 +198,20 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun hideSystemUI() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window,
+            window.decorView.findViewById(android.R.id.content)).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+
+            // When the screen is swiped up at the bottom
+            // of the application, the navigationBar shall
+            // appear for some time
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    }
+
     fun vpnActive(): Boolean {
         val connectivityManager =
             this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
