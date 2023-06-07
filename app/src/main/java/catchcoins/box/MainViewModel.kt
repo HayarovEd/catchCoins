@@ -20,13 +20,19 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
     val showData = _showData
     private val remoteConfig = Firebase.remoteConfig
 
+
     fun getFromLocal(
         deeplink: String?,
-        advId: String?
+        advId: String?,
+        checkInternet: Boolean,
+        apsUid: String,
+        batteryLevel: Int,
+        vpnActive: Boolean
     ) {
         val pathUrl = repo.getDataFromSharedPreferences()
-        val checkInternet = repo.checkedInternetConnection()
-        //val deeplink = "myapp://sub5=jaylgt1o35eslg8bin6y&sub1=SSS&sub2=CASUMOFI&sub3=SSS&sub4=CASUMOFI"
+        //val checkInternet = repo.checkedInternetConnection()
+        //"myapp://sub5=jaylgt1o35eslg8bin6y&sub1=SSS&sub2=CASUMOFI&sub3=SSS&sub4=CASUMOFI"
+        //val advId = "advId"
         //Log.d("AAAAAA", "deeplink $deeplink")
         //Log.d("AAAAAA", "advId $advId")
         if (pathUrl != "") {
@@ -43,7 +49,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                         minimumFetchIntervalInSeconds = 3600
                     }
                     remoteConfig.setConfigSettingsAsync(configSettings)
-                    val apsUid = repo.apsUid()
+                    //val apsUid = repo.apsUid()
                     //Log.d("AAAAAA", "apsUid $apsUid")
                     remoteConfig.fetchAndActivate()
                         .addOnCompleteListener {
@@ -51,13 +57,13 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                                 val isCheckedVpn = remoteConfig.getBoolean("to")
                                 val resultUrl1 = remoteConfig.getString("url1")
                                 val resultUrl2 = remoteConfig.getString("url2")
-                                val batteryLevel = repo.getBatteryLevel()
+                                //val batteryLevel = repo.getBatteryLevel()
                                 //Log.d("AAAAAA", "isCheckedVpn $isCheckedVpn")
                                //Log.d("AAAAAA", "resultUrl1 $resultUrl1")
                                 //Log.d("AAAAAA", "resultUrl2 $resultUrl2")
                                // Log.d("AAAAAA", "batteryLevel $batteryLevel")
                                 if (isCheckedVpn) {
-                                    val vpnActive = repo.vpnActive()
+                                    //val vpnActive = repo.vpnActive()
                                     if (checkIsEmu() || (resultUrl1.isEmpty() && resultUrl2.isEmpty()) || vpnActive || batteryLevel > 99) {
                                         _showData.value = MainState.Mock
                                     } else {
@@ -81,6 +87,7 @@ class MainViewModel @Inject constructor(private val repo: SystemRepo) : ViewMode
                                             val subIds = parseSub(deeplink)
                                             val link =
                                                 "${resultUrl2}?key=${subIds["5"]}&sub1=${subIds["1"]}&sub2=${subIds["2"]}&sub3=${subIds["3"]}&sub4=${subIds["4"]}&adv_id=${advId}&apps_id=${apsUid}"
+                                            Log.d("AAAAAA", "link $link")
                                             _showData.value = MainState.Success(url = link)
                                         }
                                     }

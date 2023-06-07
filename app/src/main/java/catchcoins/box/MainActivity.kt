@@ -69,12 +69,15 @@ class MainActivity : AppCompatActivity() {
     private var webViewState: Bundle? = null
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
+        @SuppressLint("AppCompatMethod")
         fun getAdvertisingId(): String? {
+            supportActionBar?.hide()
+            actionBar?.hide()
             var advertisingId: String? = null
 
             val thread = Thread {
                 try {
-                    val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(application)
+                    val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(this)
                     advertisingId = advertisingIdInfo.id
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -97,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         fun getFacebookDeepLink(callback: (String?) -> Unit) {
-            AppLinkData.fetchDeferredAppLinkData(application) { appLinkData ->
+            AppLinkData.fetchDeferredAppLinkData(this) { appLinkData ->
                 if (appLinkData != null) {
                     val targetUri = appLinkData.targetUri
                     val deepLink = targetUri.toString()
@@ -117,7 +120,11 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     viewModel.getFromLocal(
                         deeplink = deepLink,
-                        advId = advId
+                        advId = advId,
+                        checkInternet = checkedInternetConnection(),
+                        apsUid = apsUid(),
+                        batteryLevel = getBatteryLevel(),
+                        vpnActive = vpnActive()
                     )
                 }
             }}
@@ -185,6 +192,68 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+    fun vpnActive(): Boolean {
+        val connectivityManager =
+            this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val activeNetwork = connectivityManager.activeNetwork
+            val caps = connectivityManager.getNetworkCapabilities(activeNetwork)
+            if (caps != null) {
+                return caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+            }
+        } else {
+            val networkInfo = connectivityManager.activeNetworkInfo
+            if (networkInfo != null) {
+                return networkInfo.type == ConnectivityManager.TYPE_VPN
+            }
+        }
+        return false
+    }
+
+    fun getBatteryLevel(): Int {
+        val iFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        val batteryStatus = this.applicationContext.registerReceiver(null, iFilter)
+        val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+        val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+        return (level ?: 0) * 100 / (scale ?: 0)
+    }
+
+    fun apsUid(): String {
+        return AppsFlyerLib.getInstance().getAppsFlyerUID(this).toString()
+    }
+
+    fun checkedInternetConnection(): Boolean {
+        var result = false
+        val connectivityManager =
+            this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            result = when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.run {
+                connectivityManager.activeNetworkInfo?.run {
+                    result = when (type) {
+                        ConnectivityManager.TYPE_WIFI -> true
+                        ConnectivityManager.TYPE_MOBILE -> true
+                        ConnectivityManager.TYPE_ETHERNET -> true
+                        else -> false
+                    }
+
+                }
+            }
+        }
+
+        return result
+    }
+
+
 
     override fun onResume() {
         super.onResume()
