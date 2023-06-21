@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "817641262782",
+    "project_id": "catlan-8ecaf",
+    "storage_bucket": "catlan-8ecaf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817641262782:android:93dc0ff72093f4a4e558ef",
+        "android_client_info": {
+          "package_name": "catchcoins.box"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817641262782-aqnse3n7jlmg0eosdclp3hd4bie3j08s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4N1-VM1QMF6iRpnDg-qkQsWaAXMr5tqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817641262782-aqnse3n7jlmg0eosdclp3hd4bie3j08s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
